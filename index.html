@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stationary & Gift Shop Business Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Business Proposal Dashboard</h1>
+            <p class="subtitle">Stationary & Gift Shop Analysis</p>
+            <p class="description">
+                Comprehensive budget analysis and sales projection tool designed to evaluate business proposals, 
+                track financial metrics, and project future performance with detailed insights and professional reporting.
+            </p>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="file-upload-section">
+            <div class="upload-area">
+                <div class="upload-icon">📊</div>
+                <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" style="display: none;">
+                <button onclick="document.getElementById('excelFile').click()" class="upload-btn">
+                    Import Budget Data
+                </button>
+                <p class="file-info" id="fileInfo">Select Excel (.xlsx, .xls) or CSV file containing your budget data</p>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content" id="dashboardContent">
+            <!-- Budget Overview Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">💰</div>
+                    <h2>Budget Overview</h2>
+                    <span class="section-subtitle">Total Investment Analysis</span>
+                </div>
+                
+                <div class="budget-overview">
+                    <div class="budget-card">
+                        <div class="budget-card-header">
+                            <div class="budget-card-icon">📝</div>
+                            <h3>Stationary Items</h3>
+                        </div>
+                        <div class="budget-amount" id="stationaryBudget">₹0</div>
+                        <div class="budget-details">
+                            <span id="stationaryDetails">0 items</span>
+                            <span class="budget-percentage" id="stationaryPercentage">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="budget-card">
+                        <div class="budget-card-header">
+                            <div class="budget-card-icon">🎁</div>
+                            <h3>Gift Items</h3>
+                        </div>
+                        <div class="budget-amount" id="giftBudget">₹0</div>
+                        <div class="budget-details">
+                            <span id="giftDetails">0 items</span>
+                            <span class="budget-percentage" id="giftPercentage">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="budget-card">
+                        <div class="budget-card-header">
+                            <div class="budget-card-icon">💼</div>
+                            <h3>Total Investment</h3>
+                        </div>
+                        <div class="budget-amount" id="totalBudget">₹0</div>
+                        <div class="budget-details">
+                            <span id="totalDetails">Complete budget</span>
+                            <span class="budget-percentage">100%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="key-metrics">
+                    <div class="metric-card">
+                        <div class="metric-icon">📊</div>
+                        <div class="metric-value" id="avgItemCost">₹0</div>
+                        <div class="metric-label">Average Item Cost</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">📈</div>
+                        <div class="metric-value" id="investmentRatio">0:0</div>
+                        <div class="metric-label">Stationary:Gift Ratio</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🎯</div>
+                        <div class="metric-value" id="totalItems">0</div>
+                        <div class="metric-label">Total Items</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💡</div>
+                        <div class="metric-value" id="profitabilityScore">0</div>
+                        <div class="metric-label">Profitability Score</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Projection Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">📈</div>
+                    <h2>Sales Projection Calculator</h2>
+                    <span class="section-subtitle">Financial Forecasting Tool</span>
+                </div>
+                
+                <div class="projection-container">
+                    <div class="calculator-panel">
+                        <h3>💡 Projection Settings</h3>
+                        
+                        <div class="input-group">
+                            <label for="salesAmount">Monthly Sales Target (₹)</label>
+                            <input type="number" id="salesAmount" placeholder="Enter expected monthly sales" min="0" step="1">
+                        </div>
+                        
+                        <div class="advanced-options">
+                            <h4>Advanced Parameters</h4>
+                            
+                            <div class="option-row">
+                                <div class="input-group">
+                                    <label for="profitMargin">Profit Margin (%)</label>
+                                    <input type="number" id="profitMargin" value="25" min="0" max="100" step="0.1">
+                                </div>
+                                <div class="input-group">
+                                    <label for="growthRate">Growth Rate (%)</label>
+                                    <input type="number" id="growthRate" value="5" min="0" max="100" step="0.1">
+                                </div>
+                            </div>
+                            
+                            <div class="option-row">
+                                <div class="input-group">
+                                    <label for="operatingCosts">Operating Costs (%)</label>
+                                    <input type="number" id="operatingCosts" value="15" min="0" max="100" step="0.1">
+                                </div>
+                                <div class="input-group">
+                                    <label for="taxRate">Tax Rate (%)</label>
+                                    <input type="number" id="taxRate" value="10" min="0" max="100" step="0.1">
+                                </div>
+                            </div>
+                            
+                            <div class="option-row">
+                                <div class="input-group">
+                                    <label for="marketShare">Target Market Share (%)</label>
+                                    <input type="number" id="marketShare" value="2" min="0" max="100" step="0.1">
+                                </div>
+                                <div class="input-group">
+                                    <label for="seasonalFactor">Seasonal Factor (%)</label>
+                                    <input type="number" id="seasonalFactor" value="15" min="0" max="100" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="calculateProjection()" class="calculate-btn">
+                            Calculate Financial Projection
+                        </button>
+                        
+                        <div class="quick-scenarios">
+                            <h4>Quick Scenarios</h4>
+                            <button onclick="loadScenario('conservative')" class="scenario-btn">Conservative</button>
+                            <button onclick="loadScenario('moderate')" class="scenario-btn">Moderate</button>
+                            <button onclick="loadScenario('optimistic')" class="scenario-btn">Optimistic</button>
+                        </div>
+                    </div>
+
+                    <div class="results-section" id="resultsSection">
+                        <div class="results-grid">
+                            <div class="result-card">
+                                <h4>Monthly Revenue</h4>
+                                <div class="result-value" id="monthlyRevenue">₹0</div>
+                                <div class="result-subtitle">Gross income per month</div>
+                            </div>
+                            <div class="result-card">
+                                <h4>Net Profit</h4>
+                                <div class="result-value" id="monthlyProfit">₹0</div>
+                                <div class="result-subtitle">After all expenses</div>
+                            </div>
+                            <div class="result-card">
+                                <h4>Annual Projection</h4>
+                                <div class="result-value" id="annualProjection">₹0</div>
+                                <div class="result-subtitle">12-month forecast</div>
+                            </div>
+                            <div class="result-card">
+                                <h4>Break-even Point</h4>
+                                <div class="result-value" id="roiTimeline">0 months</div>
+                                <div class="result-subtitle">Investment recovery</div>
+                            </div>
+                            <div class="result-card">
+                                <h4>ROI Percentage</h4>
+                                <div class="result-value" id="roiPercentage">0%</div>
+                                <div class="result-subtitle">Return on investment</div>
+                            </div>
+                            <div class="result-card">
+                                <h4>Cash Flow</h4>
+                                <div class="result-value" id="cashFlow">₹0</div>
+                                <div class="result-subtitle">Monthly net cash</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <div class="chart-title">12-Month Financial Projection</div>
+                                <div class="chart-legend">
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #27ae60;"></div>
+                                        Revenue
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #2ecc71;"></div>
+                                        Profit
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #e74c3c;"></div>
+                                        Expenses
+                                    </div>
+                                </div>
+                            </div>
+                            <canvas id="projectionChart"></canvas>
+                        </div>
+                        
+                        <div class="performance-indicators">
+                            <h4>Performance Indicators</h4>
+                            <div class="indicators-grid">
+                                <div class="indicator">
+                                    <span class="indicator-label">Profit Margin Efficiency</span>
+                                    <div class="indicator-bar">
+                                        <div class="indicator-fill" id="profitEfficiency" style="width: 0%;"></div>
+                                    </div>
+                                    <span class="indicator-value" id="profitEfficiencyValue">0%</span>
+                                </div>
+                                <div class="indicator">
+                                    <span class="indicator-label">Market Penetration</span>
+                                    <div class="indicator-bar">
+                                        <div class="indicator-fill" id="marketPenetration" style="width: 0%;"></div>
+                                    </div>
+                                    <span class="indicator-value" id="marketPenetrationValue">0%</span>
+                                </div>
+                                <div class="indicator">
+                                    <span class="indicator-label">Growth Sustainability</span>
+                                    <div class="indicator-bar">
+                                        <div class="indicator-fill" id="growthSustainability" style="width: 0%;"></div>
+                                    </div>
+                                    <span class="indicator-value" id="growthSustainabilityValue">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Budget Breakdown Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">📋</div>
+                    <h2>Detailed Budget Breakdown</h2>
+                    <span class="section-subtitle">Item-wise Investment Analysis</span>
+                </div>
+                
+                <div class="breakdown-container">
+                    <table class="breakdown-table" id="budgetBreakdown">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Item Description</th>
+                                <th>Amount</th>
+                                <th>Budget %</th>
+                                <th>Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Budget breakdown will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Business Analysis Insights -->
+                <div class="analysis-insights">
+                    <h4>📊 Business Analysis Insights</h4>
+                    <div class="insights-grid">
+                        <div class="insight-card">
+                            <div class="insight-title">Investment Distribution</div>
+                            <div class="insight-description" id="investmentInsight">
+                                Your investment distribution will be analyzed based on the loaded data.
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-title">Market Opportunity</div>
+                            <div class="insight-description" id="marketInsight">
+                                Market analysis and opportunity assessment will be displayed here.
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-title">Risk Assessment</div>
+                            <div class="insight-description" id="riskInsight">
+                                <span class="risk-level-medium">Medium Risk</span> - Diversified portfolio with balanced investment approach.
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-title">Growth Potential</div>
+                            <div class="insight-description" id="growthInsight">
+                                Growth potential analysis based on market trends and investment strategy.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Summary -->
+            <div class="summary-section">
+                <h3>Business Proposal Summary</h3>
+                <p>Complete financial overview and projection analysis for your stationary and gift shop venture</p>
+                
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="summaryInvestment">₹0</div>
+                        <div class="summary-stat-label">Total Investment</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="summaryBreakeven">0</div>
+                        <div class="summary-stat-label">Months to Break-even</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="summaryROI">0%</div>
+                        <div class="summary-stat-label">Expected ROI</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="summaryRevenue">₹0</div>
+                        <div class="summary-stat-label">Annual Revenue Potential</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
