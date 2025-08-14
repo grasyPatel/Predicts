@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard Test Page</h1>
+    
+    <div class="test-section">
+        <h3>Library Loading Test</h3>
+        <div id="libraryTest">Testing...</div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Sample Data Test</h3>
+        <button onclick="testSampleData()">Load Sample Data</button>
+        <div id="sampleDataResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Calculation Test</h3>
+        <input type="number" id="testAmount" placeholder="Enter amount" value="5000">
+        <button onclick="testCalculation()">Test Calculation</button>
+        <div id="calculationResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Dashboard Link</h3>
+        <a href="index.html" target="_blank">Open Main Dashboard</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Test library loading
+        window.onload = function() {
+            const libraryTest = document.getElementById('libraryTest');
+            if (typeof XLSX !== 'undefined' && typeof Chart !== 'undefined') {
+                libraryTest.innerHTML = '✅ Libraries loaded successfully (XLSX and Chart.js)';
+                libraryTest.parentElement.classList.add('success');
+            } else {
+                libraryTest.innerHTML = '❌ Libraries failed to load';
+                libraryTest.parentElement.classList.add('error');
+            }
+        };
+        
+        // Test sample data
+        function testSampleData() {
+            const result = document.getElementById('sampleDataResult');
+            try {
+                const sampleBudget = {
+                    stationary: { 
+                        total: 15000, 
+                        items: [
+                            { name: 'Office Supplies', amount: 8000 },
+                            { name: 'Writing Materials', amount: 4000 },
+                            { name: 'Paper Products', amount: 3000 }
+                        ] 
+                    },
+                    gift: { 
+                        total: 8500, 
+                        items: [
+                            { name: 'Gift Items', amount: 5000 },
+                            { name: 'Decorative Items', amount: 2500 },
+                            { name: 'Greeting Cards', amount: 1000 }
+                        ] 
+                    }
+                };
+                
+                result.innerHTML = `
+                    <h4>Sample Budget Data:</h4>
+                    <p><strong>Stationary Total:</strong> $${sampleBudget.stationary.total.toLocaleString()}</p>
+                    <p><strong>Gift Total:</strong> $${sampleBudget.gift.total.toLocaleString()}</p>
+                    <p><strong>Combined Total:</strong> $${(sampleBudget.stationary.total + sampleBudget.gift.total).toLocaleString()}</p>
+                    <p>✅ Sample data loaded successfully</p>
+                `;
+                result.parentElement.classList.add('success');
+            } catch (error) {
+                result.innerHTML = `❌ Error loading sample data: ${error.message}`;
+                result.parentElement.classList.add('error');
+            }
+        }
+        
+        // Test calculation
+        function testCalculation() {
+            const result = document.getElementById('calculationResult');
+            const amount = parseFloat(document.getElementById('testAmount').value);
+            
+            try {
+                if (!amount || amount <= 0) {
+                    throw new Error('Invalid amount');
+                }
+                
+                const profitMargin = 0.25; // 25%
+                const growthRate = 0.05; // 5%
+                const totalBudget = 23500; // Sample total
+                
+                const monthlyRevenue = amount;
+                const monthlyProfit = amount * profitMargin;
+                const roiMonths = Math.ceil(totalBudget / monthlyProfit);
+                
+                // Calculate annual projection with growth
+                let annualRevenue = 0;
+                let currentMonthRevenue = monthlyRevenue;
+                for (let month = 1; month <= 12; month++) {
+                    annualRevenue += currentMonthRevenue;
+                    currentMonthRevenue *= (1 + growthRate);
+                }
+                
+                result.innerHTML = `
+                    <h4>Calculation Results:</h4>
+                    <p><strong>Monthly Revenue:</strong> $${monthlyRevenue.toLocaleString()}</p>
+                    <p><strong>Monthly Profit:</strong> $${monthlyProfit.toLocaleString()}</p>
+                    <p><strong>Annual Projection:</strong> $${annualRevenue.toLocaleString()}</p>
+                    <p><strong>ROI Timeline:</strong> ${roiMonths} months</p>
+                    <p>✅ Calculations completed successfully</p>
+                `;
+                result.parentElement.classList.add('success');
+            } catch (error) {
+                result.innerHTML = `❌ Calculation error: ${error.message}`;
+                result.parentElement.classList.add('error');
+            }
+        }
+    </script>
+</body>
+</html>
